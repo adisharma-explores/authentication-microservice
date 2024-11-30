@@ -7,6 +7,8 @@ import com.ecommerce.authentication_service.request.AuthenticationRequest;
 import com.ecommerce.authentication_service.service.CustomerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +28,11 @@ public class AuthorizationController {
     private final CustomerServiceImpl customerService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/authenticate")
     public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         final Customer customer = customerService.getUserByUsername(request.getEmail());
         String presentedPassword = request.getPassword();
         if (!passwordEncoder.matches(presentedPassword, customer.getCustomerPassword())) {
