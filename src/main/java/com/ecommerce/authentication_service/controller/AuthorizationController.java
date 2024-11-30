@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v2/auth")
+@RequestMapping("/api/v2/auth1")
 public class AuthorizationController {
     private final CustomerServiceImpl customerService;
     private final JwtUtil jwtUtil;
